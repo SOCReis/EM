@@ -1,0 +1,104 @@
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtualenv
+.venv/
+venv/
+env/
+ENV/
+
+# ==========================================
+# Dados do usuário (NUNCA commitar!)
+# ==========================================
+# Banco SQLite com alunos e presenças
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Fotos dos alunos (dados pessoais — LGPD!)
+uploads/
+
+# ==========================================
+# Modelos do InsightFace
+# ==========================================
+# Se você baixar modelos para dentro do projeto
+models/
+*.onnx
+
+# ==========================================
+# Logs e arquivos temporários
+# ==========================================
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# ==========================================
+# IDEs / Editores
+# ==========================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# ==========================================
+# Sistema operacional
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ==========================================
+# Variáveis de ambiente / segredos
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# ==========================================
+# Node (só se você usar ferramentas frontend)
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ==========================================
+# Cobertura / testes
+# ==========================================
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# Certificados locais (se usar HTTPS)
+# ==========================================
+*.p12
+*.pfx
+cert.pem
+key.pem

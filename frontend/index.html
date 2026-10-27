@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chamada Facial – Alunos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--soft:#f6f7fb;--ink:#0f172a;--mute:#64748b;--line:#e8ebf2;--pri:#4f46e5;--pri-soft:#eef0ff;--ok:#059669;--warn:#d97706;--bad:#dc2626;--sh:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:15px/1.55 "Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 24px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px rgba(79,70,229,.32)}
+h1{font-size:17px;margin:0;font-weight:600}
+header p{margin:0;font-size:13px;color:var(--mute)}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:500;border-radius:10px;padding:9px 14px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.18s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--pri);color:#fff;box-shadow:0 6px 16px rgba(79,70,229,.28)}
+.btn-primary:hover{background:#4338ca}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{background:var(--soft)}
+.btn-danger{background:#fff;border-color:#fecaca;color:var(--bad)}
+.btn-danger:hover{background:#fef2f2}
+.btn-sm{font-size:13px;padding:6px 12px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.wrap{max-width:1100px;margin:0 auto;padding:24px;display:grid;gap:20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--sh)}
+.stat span{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute);font-weight:600;margin-bottom:2px}
+.stat strong{font-size:26px;font-weight:700;line-height:1.2}
+.stat.ok strong{color:var(--ok)}.stat.pri strong{color:var(--pri)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.panel-head h2{margin:0;font-size:16px;font-weight:600}
+.panel-head p{margin:0;font-size:13px;color:var(--mute)}
+.list{list-style:none;margin:0;padding:8px;max-height:500px;overflow:auto}
+.row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;transition:background .15s}
+.row:hover{background:var(--soft)}
+.avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--pri-soft);flex:none;display:grid;place-items:center;font-weight:600;color:var(--pri);font-size:13px}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.who{flex:1;min-width:0}
+.who b{display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who small{color:var(--mute);font-size:12.5px}
+.empty{padding:40px 20px;text-align:center;color:var(--mute);font-size:14px}
+.empty b{color:var(--ink);display:block;margin-bottom:6px;font-size:15px}
+dialog{border:none;border-radius:18px;padding:0;width:min(640px,94vw);box-shadow:0 24px 60px rgba(15,23,42,.3)}
+dialog::backdrop{background:rgba(15,23,42,.6);backdrop-filter:blur(3px)}
+.dlg-body{padding:20px}
+.dlg-body h3{margin:0 0 4px;font-size:17px}
+.dlg-body>p{margin:0 0 16px;font-size:13.5px;color:var(--mute)}
+label.field{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+input[type=text]{width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);outline:none;transition:.18s;margin-bottom:14px}
+input[type=text]:focus{background:#fff;border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-soft)}
+.cam-box{position:relative;border-radius:14px;overflow:hidden;background:#0b1220;aspect-ratio:4/3;display:grid;place-items:center}
+.cam-box video{width:100%;height:100%;display:block;object-fit:cover}
+.cam-box canvas.overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cam-box .no-cam{color:#94a3b8;font-size:13px;padding:20px;text-align:center}
+.thumb-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.thumb{position:relative;width:76px;height:76px;border-radius:10px;overflow:hidden;border:2px solid var(--line)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb button{position:absolute;top:2px;right:2px;width:20px;height:20px;border:none;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;font-size:13px;line-height:1;padding:0;display:grid;place-items:center}
+.thumb-hint{font-size:12.5px;color:var(--mute);margin-top:8px}
+.file-alt{margin-top:10px;font-size:13px;color:var(--mute);text-align:center}
+.file-alt label{color:var(--pri);cursor:pointer;font-weight:600;text-decoration:underline}
+.file-alt input{display:none}
+.dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.status-bar{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:13.5px;color:var(--mute);text-align:center}
+.status-bar.ok{background:#e7f8f1;color:var(--ok);font-weight:600}
+.status-bar.bad{background:#fdecec;color:var(--bad);font-weight:600}
+.detected-list{margin-top:12px;max-height:180px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.det-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:var(--soft);font-size:13.5px}
+.det-item.ok{background:#e7f8f1}
+.det-item.bad{background:#fdecec}
+.det-item small{color:var(--mute);font-size:12px}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dot.ok{background:var(--ok)}.dot.bad{background:var(--bad)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:600px){
+  header{padding:12px 16px}
+  .wrap{padding:16px}
+  .row .btn-sm{padding:6px 9px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/>
+        <circle cx="12" cy="10" r="2.5"/><path d="M8 16c.6-2 2-3 4-3s3.4 1 4 3"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Chamada Facial</h1>
+      <p>Controle de presença · <span id="dataHoje"></span></p>
+    </div>
+  </div>
+  <div class="head-actions">
+    <button class="btn btn-ghost" id="btnCadastrar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Cadastrar aluno
+    </button>
+    <button class="btn btn-primary" id="btnReconhecer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      Iniciar chamada
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats">
+    <div class="stat pri"><span>Alunos cadastrados</span><strong id="sTotal">0</strong></div>
+    <div class="stat ok"><span>Presentes hoje</span><strong id="sPresentes">0</strong></div>
+    <div class="stat"><span>Taxa de presença</span><strong id="sTaxa">—</strong></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Presenças de hoje</h2><p id="presencasInfo">—</p></div>
+    <ul class="list" id="listaPresencas"></ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Alunos cadastrados</h2><p id="alunosInfo">—</p></div>
+    <ul class="list" id="listaAlunos"></ul>
+  </section>
+</main>
+
+<dialog id="dlgCadastrar">
+  <div class="dlg-body">
+    <h3 id="cadTitulo">Cadastrar novo aluno</h3>
+    <p>Tire <b>2 a 3 fotos em ângulos diferentes</b>. Isso melhora muito o reconhecimento à distância.</p>
+    <label class="field" for="inpNome">Nome do aluno</label>
+    <input type="text" id="inpNome" placeholder="Ex: Ana Beatriz Lima" autocomplete="off">
+
+    <div class="cam-box" id="camCadBox">
+      <video id="vidCad" autoplay playsinline muted></video>
+      <div class="no-cam" id="noCamCad">Iniciando câmera…</div>
+    </div>
+
+    <div class="thumb-strip" id="thumbs"></div>
+    <div class="thumb-hint" id="thumbHint">Nenhuma foto capturada ainda.</div>
+
+    <div class="file-alt">
+      Ou <label for="inpFile">envie uma foto</label> do computador
+      <input type="file" id="inpFile" accept="image/*" multiple>
+    </div>
+
+    <div class="status-bar" id="cadStatus" hidden></div>
+
+    <div class="dlg-actions">
+      <button class="btn btn-ghost" id="cadCancelar">Cancelar</button>
+      <button class="btn btn-ghost" id="cadCapturar">Capturar foto</button>
+      <button class="btn btn-primary" id="cadSalvar" disabled>Salvar aluno</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dlgReconhecer">
+  <div class="dlg-body">
+    <h3>Reconhecimento facial</h3>
+    <p>Aponte a câmera. Presenças são confirmadas após <b>3 frames consistentes</b>.</p>
+
+    <div class="cam-box" id="camRecBox">
+      <video id="vidRec" autoplay playsinline muted></video>
+      <canvas class="overlay" id="overlayRec"></canvas>
+      <div class="no-cam" id="noCamRec" style="display:none">Iniciando câmera…</div>
+    </div>
+
+    <div class="status-bar" id="recStatus">Aguardando…</div>
+    <div class="detected-list" id="detList"></div>
+
+    <div class="dlg-actions">
+      <button class="btn btn-ghost" id="recFechar">Encerrar</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+
+let alunos = [];
+let presencas = [];
+let streamAtual = null;
+
+/* ============ Cadastro com múltiplas fotos ============ */
+let cadMode = 'new';
+let cadStudentId = null;
+let cadPhotos = [];
+
+$('#btnCadastrar').addEventListener('click', () => abrirCadastro('new'));
+
+function abrirCadastro(mode, student = null) {
+  cadMode = mode;
+  cadStudentId = student?.id ?? null;
+  cadPhotos = [];
+  $('#inpNome').value = student?.name ?? '';
+  $('#inpNome').disabled = mode === 'add';
+  $('#cadTitulo').textContent = mode === 'add'
+    ? `Adicionar fotos — ${student.name}`
+    : 'Cadastrar novo aluno';
+  $('#cadSalvar').textContent = mode === 'add' ? 'Adicionar fotos' : 'Salvar aluno';
+  $('#cadSalvar').disabled = true;
+  $('#cadStatus').hidden = true;
+  renderThumbs();
+  $('#dlgCadastrar').showModal();
+  iniciarCamera($('#vidCad'), $('#noCamCad'));
+}
+
+$('#cadCancelar').addEventListener('click', () => {
+  $('#dlgCadastrar').close();
+  pararCamera();
+});
+$('#dlgCadastrar').addEventListener('close', () => {
+  pararCamera();
+  cadPhotos.forEach(p => URL.revokeObjectURL(p.url));
+  cadPhotos = [];
+});
+
+$('#cadCapturar').addEventListener('click', async () => {
+  const video = $('#vidCad');
+  if (!video.videoWidth) { toast('Câmera ainda não pronta.'); return; }
+  const canvas = capturar(video);
+  const blob = await canvasToBlob(canvas, 0.92);
+  cadPhotos.push({ blob, url: URL.createObjectURL(blob) });
+  renderThumbs();
+});
+
+$('#inpFile').addEventListener('change', (e) => {
+  for (const f of e.target.files) {
+    cadPhotos.push({ blob: f, url: URL.createObjectURL(f) });
+  }
+  renderThumbs();
+  e.target.value = '';
+});
+
+function renderThumbs() {
+  const strip = $('#thumbs');
+  strip.innerHTML = cadPhotos.map((p, i) => `
+    <div class="thumb">
+      <img src="${p.url}" alt="">
+      <button data-rm="${i}" title="Remover">×</button>
+    </div>
+  `).join('');
+  $('#thumbHint').textContent = cadPhotos.length
+    ? `${cadPhotos.length} foto(s) pronta(s). Recomendado: 2–3 em ângulos diferentes.`
+    : 'Nenhuma foto capturada ainda.';
+  $('#cadSalvar').disabled = cadPhotos.length === 0;
+}
+
+$('#thumbs').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-rm]');
+  if (!btn) return;
+  const i = Number(btn.dataset.rm);
+  URL.revokeObjectURL(cadPhotos[i].url);
+  cadPhotos.splice(i, 1);
+  renderThumbs();
+});
+
+$('#cadSalvar').addEventListener('click', async () => {
+  if (!cadPhotos.length) return;
+  const nome = $('#inpNome').value.trim();
+  if (cadMode === 'new' && !nome) {
+    mostrarStatus('#cadStatus', 'Digite o nome do aluno.', 'bad');
+    return;
+  }
+  const btn = $('#cadSalvar');
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = 'Enviando…';
+  try {
+    const fd = new FormData();
+    if (cadMode === 'new') fd.append('name', nome);
+    cadPhotos.forEach((p, i) => fd.append('photos', p.blob, `foto_${i}.jpg`));
+
+    const url = cadMode === 'new'
+      ? '/api/students'
+      : `/api/students/${cadStudentId}/faces`;
+    const r = await fetch(url, { method: 'POST', body: fd });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Falha ao salvar');
+
+    const msg = cadMode === 'new'
+      ? `✓ ${nome} cadastrado(a) com ${data.num_embeddings} foto(s)!`
+      : `✓ ${data.added} foto(s) adicionada(s) a ${$('#inpNome').value}!`;
+    mostrarStatus('#cadStatus', msg, 'ok');
+    toast(msg);
+    await recarregar();
+    setTimeout(() => $('#dlgCadastrar').close(), 1000);
+  } catch (err) {
+    mostrarStatus('#cadStatus', err.message, 'bad');
+  } finally {
+    btn.disabled = cadPhotos.length === 0;
+    btn.textContent = orig;
+  }
+});
+
+function mostrarStatus(sel, msg, tipo) {
+  const el = $(sel);
+  el.hidden = false;
+  el.textContent = msg;
+  el.className = 'status-bar' + (tipo ? ' ' + tipo : '');
+}
+
+/* ============ Reconhecimento ============ */
+const VOTES_NEEDED = 3;
+const VOTE_TIMEOUT_MS = 1500;
+const REGISTERED = new Set();
+const votes = new Map();
+
+let reconhecendo = false;
+let frameEmEnvio = false;
+
+$('#btnReconhecer').addEventListener('click', async () => {
+  if (!alunos.length) { toast('Cadastre pelo menos um aluno.'); return; }
+  REGISTERED.clear(); votes.clear();
+  $('#detList').innerHTML = '';
+  $('#recStatus').textContent = 'Iniciando…';
+  $('#recStatus').className = 'status-bar';
+  $('#dlgReconhecer').showModal();
+  const ok = await iniciarCamera($('#vidRec'), $('#noCamRec'));
+  if (!ok) return;
+  syncOverlay();
+  reconhecendo = true;
+  loopReconhecimento();
+});
+
+$('#recFechar').addEventListener('click', () => {
+  reconhecendo = false;
+  $('#dlgReconhecer').close();
+});
+$('#dlgReconhecer').addEventListener('close', () => {
+  reconhecendo = false;
+  pararCamera();
+  const o = $('#overlayRec');
+  o.getContext('2d').clearRect(0, 0, o.width, o.height);
+  REGISTERED.clear(); votes.clear();
+});
+
+function syncOverlay() {
+  const v = $('#vidRec');
+  const o = $('#overlayRec');
+  const box = $('#camRecBox');
+  if (!v.videoWidth) return;
+  o.width = v.videoWidth;
+  o.height = v.videoHeight;
+  box.style.aspectRatio = `${v.videoWidth} / ${v.videoHeight}`;
+  v.addEventListener('loadedmetadata', syncOverlay, { once: true });
+}
+
+async function loopReconhecimento() {
+  if (!reconhecendo || frameEmEnvio) return;
+  const video = $('#vidRec');
+  if (!video.videoWidth) { setTimeout(loopReconhecimento, 250); return; }
+  frameEmEnvio = true;
+  try {
+    const canvas = capturar(video);
+    const blob = await canvasToBlob(canvas, 0.85);
+    const fd = new FormData();
+    fd.append('photo', blob, 'frame.jpg');
+    const r = await fetch('/api/recognize', { method: 'POST', body: fd });
+    const data = await r.json();
+    await tratarResultado(data);
+  } catch (e) {
+    console.error(e);
+    $('#recStatus').textContent = 'Erro ao reconhecer.';
+    $('#recStatus').className = 'status-bar bad';
+  } finally {
+    frameEmEnvio = false;
+    if (reconhecendo) setTimeout(loopReconhecimento, 350);
+  }
+}
+
+async function tratarResultado(data) {
+  const status = $('#recStatus');
+  const detList = $('#detList');
+
+  if (!data.detected) {
+    status.textContent = 'Nenhum rosto detectado. Aproxime-se ou melhore a luz.';
+    status.className = 'status-bar';
+    detList.innerHTML = '';
+    limparOverlay();
+    return;
+  }
+
+  const reconhecidos = data.matches.filter(m => m.match);
+  status.textContent = `${data.detected} rosto(s) · ${reconhecidos.length} reconhecido(s)`;
+  status.className = 'status-bar' + (reconhecidos.length ? ' ok' : '');
+
+  const now = Date.now();
+  const currentIds = new Set();
+  for (const m of reconhecidos) {
+    const sid = m.match.id;
+    currentIds.add(sid);
+    if (REGISTERED.has(sid)) continue;
+    let v = votes.get(sid);
+    if (!v || now - v.last > VOTE_TIMEOUT_MS) v = { count: 0, last: 0, name: m.match.name };
+    v.count += 1; v.last = now;
+    votes.set(sid, v);
+    if (v.count >= VOTES_NEEDED) {
+      REGISTERED.add(sid);
+      await registrarPresenca(sid, m.score, m.match.name);
+    }
+  }
+  for (const [sid, v] of votes) {
+    if (!currentIds.has(sid) && now - v.last > VOTE_TIMEOUT_MS) votes.delete(sid);
+  }
+
+  detList.innerHTML = data.matches.map(m => {
+    const vote = m.match ? (votes.get(m.match.id)?.count ?? 0) : 0;
+    const dots = m.match && !REGISTERED.has(m.match.id)
+      ? '·'.repeat(Math.min(vote, VOTES_NEEDED)).padEnd(VOTES_NEEDED, '·')
+      : '';
+    if (m.match) {
+      const st = REGISTERED.has(m.match.id) ? '✓ presente'
+               : m.low_quality ? 'aguardando (blur)'
+               : `aguardando ${dots}`;
+      return `<div class="det-item ok"><span class="dot ok"></span>
+        <b>${escapeHtml(m.match.name)}</b>
+        <small style="margin-left:auto">${(m.score*100).toFixed(0)}% · ${m.face_px}px · ${st}</small>
+      </div>`;
+    }
+    return `<div class="det-item bad"><span class="dot bad"></span>
+      Desconhecido
+      <small style="margin-left:auto">${(m.score*100).toFixed(0)}% · ${m.face_px}px · threshold ${(m.threshold*100).toFixed(0)}%</small>
+    </div>`;
+  }).join('');
+
+  desenharOverlay(data.matches);
+}
+
+async function registrarPresenca(sid, score, name) {
+  try {
+    const r = await fetch('/api/attendance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: sid, confidence: score }),
+    });
+    const res = await r.json();
+    if (!res.already_marked) toast(`✓ ${name} presente`);
+    await recarregar();
+  } catch (e) { console.error(e); }
+}
+
+function desenharOverlay(matches) {
+  const o = $('#overlayRec');
+  const ctx = o.getContext('2d');
+  ctx.clearRect(0, 0, o.width, o.height);
+  const W = o.width, H = o.height;
+
+  for (const m of matches) {
+    const [x1, y1, x2, y2] = m.bbox_norm;
+    const px = x1 * W, py = y1 * H, pw = (x2 - x1) * W, ph = (y2 - y1) * H;
+
+    const accepted = m.match && !m.low_quality;
+    const color = accepted ? '#10b981' : (m.match ? '#f59e0b' : '#ef4444');
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(3, W / 400);
+    ctx.strokeRect(px, py, pw, ph);
+
+    let label;
+    if (m.match) label = `${m.match.name} ${(m.score*100).toFixed(0)}% · ${m.face_px}px`;
+    else label = `? ${(m.score*100).toFixed(0)}% · ${m.face_px}px`;
+
+    ctx.font = `bold ${Math.max(15, W / 55)}px Inter, sans-serif`;
+    const tw = ctx.measureText(label).width;
+    const lh = Math.max(22, W / 40);
+    ctx.fillStyle = color;
+    ctx.fillRect(px, Math.max(0, py - lh), tw + 14, lh);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(label, px + 7, Math.max(lh - 6, py - 6));
+  }
+}
+
+function limparOverlay() {
+  const o = $('#overlayRec');
+  o.getContext('2d').clearRect(0, 0, o.width, o.height);
+}
+
+/* ============ Câmera ============ */
+async function iniciarCamera(videoEl, noCamEl) {
+  pararCamera();
+  try {
+    streamAtual = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1920 }, height: { ideal: 1080 },
+               facingMode: { ideal: 'user' } },
+      audio: false,
+    });
+    videoEl.srcObject = streamAtual;
+    await videoEl.play();
+    if (noCamEl) noCamEl.style.display = 'none';
+    return true;
+  } catch (e) {
+    console.error(e);
+    if (noCamEl) {
+      noCamEl.textContent = 'Câmera indisponível. Use o envio de foto.';
+      noCamEl.style.display = 'block';
+    }
+    return false;
+  }
+}
+function pararCamera() {
+  if (streamAtual) {
+    streamAtual.getTracks().forEach(t => t.stop());
+    streamAtual = null;
+  }
+}
+function capturar(videoEl) {
+  const c = document.createElement('canvas');
+  c.width = videoEl.videoWidth;
+  c.height = videoEl.videoHeight;
+  c.getContext('2d').drawImage(videoEl, 0, 0);
+  return c;
+}
+function canvasToBlob(canvas, quality = 0.9) {
+  return new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+}
+
+/* ============ Render ============ */
+function avatarHTML(photoPath, name) {
+  if (photoPath) return `<div class="avatar"><img src="/uploads/${photoPath}" alt=""></div>`;
+  const ini = name.trim().split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
+  return `<div class="avatar">${ini}</div>`;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAlunos() {
+  const lista = $('#listaAlunos');
+  $('#alunosInfo').textContent = alunos.length ? `${alunos.length} aluno(s)` : '—';
+  if (!alunos.length) {
+    lista.innerHTML = `<li class="empty"><b>Nenhum aluno cadastrado</b>Clique em "Cadastrar aluno" para começar.</li>`;
+    return;
+  }
+  lista.innerHTML = alunos.map(a => `
+    <li class="row">
+      ${avatarHTML(a.photo_path, a.name)}
+      <div class="who">
+        <b>${escapeHtml(a.name)}</b>
+        <small>${a.num_photos} foto(s) cadastrada(s)</small>
+      </div>
+      <button class="btn btn-ghost btn-sm" data-add="${a.id}">＋ foto</button>
+      <button class="btn btn-danger btn-sm" data-del="${a.id}">Excluir</button>
+    </li>
+  `).join('');
+}
+
+function renderPresencas() {
+  const lista = $('#listaPresencas');
+  $('#presencasInfo').textContent = presencas.length ? `${presencas.length} presente(s)` : '—';
+  if (!presencas.length) {
+    lista.innerHTML = `<li class="empty"><b>Ninguém marcou presença ainda hoje</b>Inicie a chamada para reconhecer os alunos.</li>`;
+    return;
+  }
+  lista.innerHTML = presencas.map(p => `
+    <li class="row">
+      ${avatarHTML(p.photo_path, p.name)}
+      <div class="who">
+        <b>${escapeHtml(p.name)}</b>
+        <small>Presença às ${p.time} · confiança ${(p.confidence * 100).toFixed(0)}%</small>
+      </div>
+      <span class="status-bar ok" style="margin:0;padding:4px 10px;font-size:12px">Presente</span>
+    </li>
+  `).join('');
+}
+
+function renderStats() {
+  $('#sTotal').textContent = alunos.length;
+  $('#sPresentes').textContent = presencas.length;
+  $('#sTaxa').textContent = alunos.length
+    ? Math.round((presencas.length / alunos.length) * 100) + '%'
+    : '—';
+}
+
+async function apiGet(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Erro ' + url);
+  return r.json();
+}
+async function recarregar() {
+  try {
+    [alunos, presencas] = await Promise.all([
+      apiGet('/api/students'), apiGet('/api/attendance'),
+    ]);
+    renderAlunos(); renderPresencas(); renderStats();
+  } catch (e) { console.error(e); toast('Erro ao carregar. Backend rodando?'); }
+}
+
+document.addEventListener('click', async (e) => {
+  const addBtn = e.target.closest('[data-add]');
+  if (addBtn) {
+    const id = Number(addBtn.dataset.add);
+    const aluno = alunos.find(a => a.id === id);
+    if (aluno) abrirCadastro('add', aluno);
+    return;
+  }
+  const delBtn = e.target.closest('[data-del]');
+  if (delBtn) {
+    const id = Number(delBtn.dataset.del);
+    const aluno = alunos.find(a => a.id === id);
+    if (!aluno) return;
+    if (!confirm(`Excluir ${aluno.name}? Todas as fotos e presenças serão removidas.`)) return;
+    await fetch(`/api/students/${id}`, { method: 'DELETE' });
+    toast(`${aluno.name} removido(a)`);
+    await recarregar();
+  }
+});
+
+/* ============ Init ============ */
+$('#dataHoje').textContent = new Date().toLocaleDateString('pt-BR', {
+  weekday: 'long', day: '2-digit', month: 'long',
+});
+recarregar();
+setInterval(recarregar, 8000);
+</script>
+</body>
+</html>
